@@ -36,7 +36,7 @@
 
         touchThreshold : 10,
 
-        touchClassName: null,
+        touchActiveClassName: null,
 
         isTouch : this.document && 'ontouchstart' in this.document && !('callPhantom' in this),
 
@@ -93,7 +93,6 @@
         // for *button* and *a* elements
         _touchHandler : function(e) {
             var oe = e.originalEvent || e;
-            console.log(e.type, e);
             if (!('changedTouches' in oe)) return;
             var touch         = oe.changedTouches[0];
             var x             = touch.clientX;
@@ -102,11 +101,8 @@
             switch (e.type) {
                 case 'touchstart':
                     this._touching = [x, y];
-                    if ( _.isString(this.touchClassName) )
-                        currentTarget.addClass( this.touchClassName );
-                    break;
-                case 'touchcancel':
-                    console.log("AAA");
+                    if ( _.isString(this.touchActiveClassName) )
+                        currentTarget.addClass( this.touchActiveClassName );
                     break;
                 case 'touchend':
                     var oldX = this._touching[0];
@@ -125,8 +121,8 @@
                         }
                         e.data.method(e);
                     }
-                    if ( _.isString(this.touchClassName) )
-                        currentTarget.removeClass( this.touchClassName );
+                    if ( _.isString(this.touchActiveClassName) )
+                        currentTarget.removeClass( this.touchActiveClassName );
                     break;
             }
         }

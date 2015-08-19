@@ -26,7 +26,7 @@
 
         initialize : function(options) {
             if (!options) options = {};
-            this.touchClassName = options.touchClassName;
+            this.touchActiveClassName = options.touchActiveClassName;
             _.bindAll(this);
             this.$('.click').on('click', this.clicked);
         },

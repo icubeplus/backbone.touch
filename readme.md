@@ -41,6 +41,10 @@ a no-op part from including it.
 
 ## Release notes ##
 
+### 0.4.3 ###
+
+* New feature touchActiveClassName. If the property is valued sets a CSS class to the current item.
+
 ### 0.4 ###
 
 * NodeJS + Browserify environment support
