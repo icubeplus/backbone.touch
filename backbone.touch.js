@@ -36,6 +36,8 @@
 
         touchThreshold : 10,
 
+        touchClassName: null,
+
         isTouch : this.document && 'ontouchstart' in this.document && !('callPhantom' in this),
 
         // Drop in replacement for Backbone.View#delegateEvent
@@ -61,8 +63,6 @@
                         {method:method},
                         boundHandler
                     );
-                    // add the original event listener for devices with touch + mouse
-                    this.$el.on(eventName, selector, method);
                 }
                 else {
                     eventName += suffix;
@@ -90,15 +90,23 @@
         //
         // The `touchPrevents` toggle decides if Backbone.touch
         // will stop propagation and prevent default
+        // for *button* and *a* elements
         _touchHandler : function(e) {
             var oe = e.originalEvent || e;
+            console.log(e.type, e);
             if (!('changedTouches' in oe)) return;
-            var touch = oe.changedTouches[0];
-            var x = touch.clientX;
-            var y = touch.clientY;
+            var touch         = oe.changedTouches[0];
+            var x             = touch.clientX;
+            var y             = touch.clientY;
+            var currentTarget = Backbone.$(e.currentTarget);
             switch (e.type) {
                 case 'touchstart':
                     this._touching = [x, y];
+                    if ( _.isString(this.touchClassName) )
+                        currentTarget.addClass( this.touchClassName );
+                    break;
+                case 'touchcancel':
+                    console.log("AAA");
                     break;
                 case 'touchend':
                     var oldX = this._touching[0];
@@ -108,11 +116,17 @@
                         y < (oldY + threshold) && y > (oldY - threshold)) {
                         this._touching = false;
                         if (this.touchPrevents) {
-                            e.preventDefault();
-                            e.stopPropagation();
+                            var tagName = e.currentTarget.tagName;
+                            if (tagName === 'BUTTON' ||
+                                tagName === 'A') {
+                                e.preventDefault();
+                                e.stopPropagation();
+                            }
                         }
                         e.data.method(e);
                     }
+                    if ( _.isString(this.touchClassName) )
+                        currentTarget.removeClass( this.touchClassName );
                     break;
             }
         }

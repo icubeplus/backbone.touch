@@ -10,6 +10,7 @@
         factory(Backbone);
     }
 }(function (Backbone) {
+
     View = Backbone.View.extend({
         _click : null,
         _touch : null,
@@ -23,7 +24,9 @@
             'touchstart .click' : 'setTime'
         },
 
-        initialize : function() {
+        initialize : function(options) {
+            if (!options) options = {};
+            this.touchClassName = options.touchClassName;
             _.bindAll(this);
             this.$('.click').on('click', this.clicked);
         },
